@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+  namespace: default
+  labels:
+    app: todo-backend
+spec:
+  selector:
+    matchLabels:
+      app: todo-backend
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+    
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+      - name: todo-backend
+        image:  adamako/todo-backend:latest
+        envFrom:
+          - configMapRef:
+              name: backend-config
+        ports:
+        - containerPort:  8082
+          name:  todo-backend
+
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: backend-config
+  labels:
+    app: todo-backend
+  namespace: default
+data:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-service/kotlinTodo
+  SPRING_DATASOURCE_USERNAME: postgres
+  SPRING_DATASOURCE_PASSWORD: zuhelfnfahwd
+
