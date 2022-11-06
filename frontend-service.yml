@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: default
+  labels:
+    app: todo-frontend
+spec:
+  selector:
+    app: todo-frontend
+  type: LoadBalancer
+  ports:
+  - name: frontend-service-port
+    protocol: TCP
+    port: 3000
